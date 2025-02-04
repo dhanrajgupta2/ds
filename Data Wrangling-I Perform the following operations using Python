@@ -1,0 +1,75 @@
+EXP 1 : 
+
+Data Wrangling-I
+Perform the following operations using Python on any open-source dataset (e.g., data.csv)
+1. Import all the required Python Libraries.
+2. Locate an open source data from the web (e.g., https://www.kaggle.com). Provide a clear
+description of the data and its source (i.e., URL of the web site).
+3. Load the Dataset into pandas dataframe.
+4. Data Pre-processing: check for missing values in the data using pandas isnull(), describe()
+function to get some initial statistics. Provide variable descriptions. Types of variables etc. Check
+the dimensions of the data frame.
+5. Data Formatting and Data Normalization: Summarize the types of variables by checking the
+data types (i.e., character, numeric, integer, factor, and logical) of the variables in the data set. If
+variables are not in the correct data type, apply proper type conversions.
+6. Turn categorical variables into quantitative variables in Python.
+In addition to the codes and outputs, explain every operation that you do in the above steps and
+explain everything that you do to import/read/scrape the data set.
+
+solution :
+
+
+# Step 1: Import Required Libraries
+import pandas as pd
+import numpy as np
+
+# Step 2: Load the Dataset into a Pandas DataFrame
+file_path = "a1.csv"  # Ensure the file is in the same directory or provide the full path
+df = pd.read_csv(file_path)
+
+# Step 3: Data Preprocessing
+# Check for missing values
+print("Missing Values in Each Column:")
+print(df.isnull().sum())
+print("\n")
+
+# Get initial statistics
+print("Basic Statistics:")
+print(df.describe(include="all"))
+print("\n")
+
+# Check dimensions of the dataframe
+print(f"Dataset Dimensions: {df.shape}")
+print("\n")
+
+# Check data types of each column
+print("Data Types of Each Column:")
+print(df.dtypes)
+print("\n")
+
+# Step 4: Data Formatting & Normalization
+# Convert 'Value' column to numeric (handling errors if any non-numeric values exist)
+df["Value"] = pd.to_numeric(df["Value"], errors="coerce")
+
+# Display updated data types
+print("Updated Data Types After Conversion:")
+print(df.dtypes)
+print("\n")
+
+# Step 5: Convert Categorical Variables to Numeric (Encoding)
+df_encoded = pd.get_dummies(df, columns=[
+    "Industry_aggregation_NZSIOC",
+    "Industry_code_NZSIOC",
+    "Industry_name_NZSIOC",
+    "Units",
+    "Variable_code",
+    "Variable_name",
+    "Variable_category",
+    "Industry_code_ANZSIC06"
+], drop_first=True)  # drop_first=True to avoid multicollinearity
+
+# Display the first few rows of the encoded dataset
+print("Encoded DataFrame (First 5 Rows):")
+print(df_encoded.head())
+
+
