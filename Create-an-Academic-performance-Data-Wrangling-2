@@ -21,7 +21,7 @@ import seaborn as sns
 file_path = '/mnt/data/A2.csv'
 df = pd.read_csv(file_path)
 
-# Checking for missing values
+# 1. Scan all variables for missing values and inconsistencies
 missing_values = df.isnull().sum()
 
 # Filling missing values with the mean of each subject
@@ -32,6 +32,7 @@ df['Subject 4'].fillna(df['Subject 4'].mean(), inplace=True)
 median_attendance = df['Attendance'].median()
 df['Attendance'] = df['Attendance'].apply(lambda x: median_attendance if x < 0 else x)
 
+# 2. Scan all numeric variables for outliers and handle them
 # Detecting outliers using the IQR method
 Q1 = df[['Subject 1', 'Subject 2', 'Subject 3', 'Subject 4', 'Attendance']].quantile(0.25)
 Q3 = df[['Subject 1', 'Subject 2', 'Subject 3', 'Subject 4', 'Attendance']].quantile(0.75)
@@ -44,7 +45,8 @@ for column in ['Subject 1', 'Subject 2', 'Subject 3', 'Subject 4', 'Attendance']
     df[column] = np.where(df[column] < lower_bound[column], lower_bound[column], df[column])
     df[column] = np.where(df[column] > upper_bound[column], upper_bound[column], df[column])
 
-# Applying log transformation to 'Attendance' column to reduce skewness
+# 3. Apply data transformation to reduce skewness
+# Applying log transformation to 'Attendance' column
 df['Log_Attendance'] = np.log(df['Attendance'] + 1)
 
 # Visualizing the distribution before and after transformation
