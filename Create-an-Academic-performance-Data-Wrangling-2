@@ -1,0 +1,60 @@
+Create an “Academic performance” dataset of students and perform the following operations using Python.
+1. Scan all variables for missing values and inconsistencies. If there are missing values and/or inconsistencies,
+use any of the suitable techniques to deal with them.
+2. Scan all numeric variables for outliers. If there are outliers, use any of the suitable techniques to deal with
+them.
+3. Apply data transformations on at least one of the variables. The purpose of this transformation should be one
+of the following reasons: to change the scale for better understanding of the variable, to convert a non- linear
+relation into a linear one, or to decrease the skewness and convert the distribution into a normal distribution.
+
+Solution:
+
+
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+file_path = '/mnt/data/A2.csv'
+df = pd.read_csv(file_path)
+
+# Checking for missing values
+missing_values = df.isnull().sum()
+
+# Filling missing values with the mean of each subject
+df['Subject 3'].fillna(df['Subject 3'].mean(), inplace=True)
+df['Subject 4'].fillna(df['Subject 4'].mean(), inplace=True)
+
+# Fixing negative attendance by replacing it with the median
+median_attendance = df['Attendance'].median()
+df['Attendance'] = df['Attendance'].apply(lambda x: median_attendance if x < 0 else x)
+
+# Detecting outliers using the IQR method
+Q1 = df[['Subject 1', 'Subject 2', 'Subject 3', 'Subject 4', 'Attendance']].quantile(0.25)
+Q3 = df[['Subject 1', 'Subject 2', 'Subject 3', 'Subject 4', 'Attendance']].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+# Capping outliers
+for column in ['Subject 1', 'Subject 2', 'Subject 3', 'Subject 4', 'Attendance']:
+    df[column] = np.where(df[column] < lower_bound[column], lower_bound[column], df[column])
+    df[column] = np.where(df[column] > upper_bound[column], upper_bound[column], df[column])
+
+# Applying log transformation to 'Attendance' column to reduce skewness
+df['Log_Attendance'] = np.log(df['Attendance'] + 1)
+
+# Visualizing the distribution before and after transformation
+plt.figure(figsize=(14, 6))
+plt.subplot(1, 2, 1)
+sns.histplot(df['Attendance'], kde=True)
+plt.title('Original Attendance Distribution')
+
+plt.subplot(1, 2, 2)
+sns.histplot(df['Log_Attendance'], kde=True)
+plt.title('Log Transformed Attendance Distribution')
+
+plt.show()
