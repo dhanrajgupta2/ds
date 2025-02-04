@@ -60,3 +60,83 @@ sns.histplot(df['Log_Attendance'], kde=True)
 plt.title('Log Transformed Attendance Distribution')
 
 plt.show()
+
+
+or ( without in-built function )
+
+
+Step 1: Manually Checking & Handling Missing Values
+
+import pandas as pd
+import numpy as np
+
+# Sample dataset creation
+data = {
+    'Student_ID': [1, 2, 3, 4, 5, 6],
+    'Subject_1': [85, 90, np.nan, 75, 95, 100],  # Contains NaN
+    'Subject_2': [78, 80, 82, np.nan, 88, 92],  # Contains NaN
+    'Attendance': [95, 88, -5, 80, 100, 105]  # Contains an invalid negative value
+}
+
+df = pd.DataFrame(data)
+
+# 1. Scanning for Missing Values Manually
+missing_values = {}
+for col in df.columns:
+    count = 0
+    for val in df[col]:
+        if isinstance(val, float) and np.isnan(val):  # Check for NaN manually
+            count += 1
+    missing_values[col] = count
+
+print("Missing values count per column:", missing_values)
+
+# Filling missing values manually (using column mean)
+for col in ['Subject_1', 'Subject_2']:
+    total = 0
+    count = 0
+    for val in df[col]:
+        if not (isinstance(val, float) and np.isnan(val)):  # Ignore NaN values
+            total += val
+            count += 1
+
+    mean_value = total / count  # Calculate mean
+    for i in range(len(df[col])):
+        if isinstance(df[col][i], float) and np.isnan(df[col][i]):  # If NaN, replace with mean
+            df.at[i, col] = mean_value
+
+# Fixing invalid attendance values (negative values)
+for i in range(len(df['Attendance'])):
+    if df.at[i, 'Attendance'] < 0:
+        df.at[i, 'Attendance'] = 0  # Replace negative with 0
+
+Step 2: Detecting & Handling Outliers (IQR Method Without Built-in Functions)
+
+# Manually finding Q1 and Q3
+numeric_cols = ['Subject_1', 'Subject_2', 'Attendance']
+
+for col in numeric_cols:
+    sorted_vals = sorted(df[col])  # Sort values manually
+    n = len(sorted_vals)
+    
+    q1_index = n // 4
+    q3_index = (3 * n) // 4
+    
+    q1 = sorted_vals[q1_index]
+    q3 = sorted_vals[q3_index]
+    
+    iqr = q3 - q1  # Interquartile Range
+    lower_bound = q1 - 1.5 * iqr
+    upper_bound = q3 + 1.5 * iqr
+
+    # Manually replacing outliers with upper/lower bound
+    for i in range(n):
+        if sorted_vals[i] < lower_bound:
+            df.at[i, col] = lower_bound
+        elif sorted_vals[i] > upper_bound:
+            df.at[i, col] = upper_bound
+
+step 3 : Applying Manual Log Transformation (For Normalization)
+
+# Log transformation (Manual log to reduce skewness)
+df['Log_Attendance'] = [np.log(x + 1) for x in df['Attendance']]  # Adding 1 to avoid log(0)
