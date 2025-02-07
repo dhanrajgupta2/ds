@@ -34,6 +34,10 @@ df['Subject 4'].fillna(df['Subject 4'].mean(), inplace=True)
 # Fixing negative attendance by replacing it with the median
 median_attendance = df['Attendance'].median()
 df['Attendance'] = df['Attendance'].apply(lambda x: median_attendance if x < 0 else x)
+# or 
+# median_attendance = df['Attendance'].median()
+# df['Attendance'] = df['Attendance'].clip(lower=median_attendance)
+
 
 # 2. Scan all numeric variables for outliers and handle them
 # Detecting outliers using the IQR method
