@@ -114,9 +114,6 @@ print("Missing values count per column:", missing_values)
 
 # print("Missing values count per column:", missing_values)
 
-
-
-
 # Filling missing values manually (using column mean)
 for col in ['Subject_1', 'Subject_2']:
     total = 0
@@ -135,6 +132,11 @@ for col in ['Subject_1', 'Subject_2']:
 for i in range(len(df['Attendance'])):
     if df.at[i, 'Attendance'] < 0:
         df.at[i, 'Attendance'] = 0  # Replace negative with 0
+# or 
+# for i in range(len(df['Attendance'])):  
+    # if df['Attendance'][i] < 0:  
+        # df.at[i, 'Attendance'] = 0  
+
 
 Step 2: Detecting & Handling Outliers (IQR Method Without Built-in Functions)
 
