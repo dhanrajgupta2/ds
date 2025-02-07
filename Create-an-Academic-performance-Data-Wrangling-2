@@ -103,6 +103,20 @@ for col in df.columns:
 
 print("Missing values count per column:", missing_values)
 
+# or 
+# missing_values = {}
+# for col in df.columns:
+    # count = 0
+    # for val in df[col]:
+        # if type(val) == float and val != val:  # NaN check (since NaN != NaN)
+            # count += 1
+    # missing_values[col] = count
+
+# print("Missing values count per column:", missing_values)
+
+
+
+
 # Filling missing values manually (using column mean)
 for col in ['Subject_1', 'Subject_2']:
     total = 0
