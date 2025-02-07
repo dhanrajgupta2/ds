@@ -23,6 +23,7 @@ df = pd.read_csv(file_path)
 
 # 1. Scan all variables for missing values and inconsistencies
 missing_values = df.isnull().sum()
+missing_values
 
 # Filling missing values with the mean of each subject
 df['Subject 3'].fillna(df['Subject 3'].mean(), inplace=True)
