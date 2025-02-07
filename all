@@ -117,8 +117,6 @@ df[numerical_columns] = scaler.fit_transform(df[numerical_columns])
 df_encoded = pd.get_dummies(df, columns=['species'])
 
 <===========================================================================================================================================================================================================================================================>
-EXP 2 :
-
 Create an “Academic performance” dataset of students and perform the following operations using Python.
 1. Scan all variables for missing values and inconsistencies. If there are missing values and/or inconsistencies,
 use any of the suitable techniques to deal with them.
@@ -144,6 +142,7 @@ df = pd.read_csv(file_path)
 
 # 1. Scan all variables for missing values and inconsistencies
 missing_values = df.isnull().sum()
+missing_values
 
 # Filling missing values with the mean of each subject
 df['Subject 3'].fillna(df['Subject 3'].mean(), inplace=True)
