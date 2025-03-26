@@ -337,7 +337,81 @@ f1 = f1_score(y_test,y_predicted)
 print("f1", f1)
 
 <============================================================================================================================================================================================================================================================>
+Exp 6 
 
+1.Implement Simple Naïve Bayes classification algorithm using Python/R on iris.csv dataset.
+
+2. Compute Confusion matrix to find TP, FP, TN, FN, Accuracy, Error rate, Precision, Recall on
+the given dataset.
+
+Answer 
+
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+
+# Load the Iris dataset
+data = pd.read_csv("iris.csv")
+
+# Display first few rows
+print(data.head())
+
+# Check data distribution
+print(data['species'].value_counts())
+
+# Splitting the dataset into features and target variable
+X = data.iloc[:, :-1]  # Features (sepal length, width, petal length, width)
+y = data.iloc[:, -1]   # Target variable (species)
+
+# Splitting into train and test sets (80% train, 20% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train Naïve Bayes classifier
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Make predictions on test data
+y_pred = model.predict(X_test)
+
+# Compute Confusion Matrix
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:\n", conf_matrix)
+
+# Extract TP, FP, TN, FN for each class
+TP = np.diag(conf_matrix)  # True Positives
+FP = conf_matrix.sum(axis=0) - TP  # False Positives
+FN = conf_matrix.sum(axis=1) - TP  # False Negatives
+TN = conf_matrix.sum() - (TP + FP + FN)  # True Negatives
+
+# Compute performance metrics
+accuracy = accuracy_score(y_test, y_pred)
+error_rate = 1 - accuracy
+precision = TP / (TP + FP)
+recall = TP / (TP + FN)
+
+# Display metrics
+print(f"Accuracy: {accuracy:.4f}")
+print(f"Error Rate: {error_rate:.4f}")
+print(f"Precision per class: {precision}")
+print(f"Recall per class: {recall}")
+
+# Classification Report
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+# Plot confusion matrix heatmap
+plt.figure(figsize=(6, 5))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=data['species'].unique(), yticklabels=data['species'].unique())
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix Heatmap")
+plt.show()
+
+<============================================================================================================================================================================================================================================================>
 EXP 8 
 
 """"Data Visualization I
