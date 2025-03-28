@@ -341,6 +341,480 @@ basic_statistics(virginica, 'Iris-virginica')
 
 
 <============================================================================================================================================================================================================================================================>
+exp 4 :Create a Linear Regression Model using Python/R to predict home prices using Boston Housing Dataset(https://www.kaggle.com/c/boston-housing). 
+The Boston Housing dataset contains information about various houses in Boston through different parameters.
+There are 506 samples and 14 feature variables in this dataset.
+
+sol: 
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+%matplotlib inline
+import warnings
+warnings.filterwarnings(action = 'ignore')
+
+df = pd.read_csv("/home/student/Downloads/housing_data (1).csv")
+df
+
+name = ['CRIM','ZN','INDUS','CHAS','NOX','RM','AGE','DIS','RAD','TAX','PTRATIO','B','LSTAT','MEDV']
+
+df.head()
+
+df.tail()
+
+df.shape
+
+df.info()
+
+df.isnull().sum()
+
+for i in name:
+    df[i].fillna(df[i].median(),inplace = True)
+    
+df.isnull().sum()
+
+plt.figure(figsize = (12,12))
+sns.heatmap(data = df.corr().round(2),annot = True,cmap = 'coolwarm',linewidths = 0.2,square = True)
+
+df1 = df[['RM','TAX','PTRATIO','LSTAT','MEDV']]
+df1.head()
+
+sns.pairplot(df1)
+
+d = df1.describe().round(2)
+d
+
+plt.figure(figsize = (20,3))
+
+plt.subplot(1,2,1)
+sns.boxplot(df1.MEDV,color = '#005030')
+plt.title('Boxplot of MEDV')
+
+plt.subplot(1,2,2)
+sns.distplot(a = df1.MEDV,color = '#500050')
+plt.title('Distribution Plot of MEDV')
+plt.show()
+
+
+
+Q3 = d['MEDV']['75%']
+Q1 = d['MEDV']['25%']
+IQR = Q3 - Q1
+ub = Q3 + 1.5*IQR
+lb = Q1 - 1.5*IQR
+
+df1[df1['MEDV'] > ub]
+
+
+
+print(f"Shape of the dataset before removing outlier {df1.shape} ")
+
+df2 = df1[~(df1['MEDV'] == 50)]
+
+print(f"Shape of the dataset after removing outlier {df2.shape} ")
+
+
+plt.figure(figsize = (20,3))
+
+plt.subplot(1,3,1)
+sns.boxplot(df2['TAX'],color = '#005030')
+plt.title('Boxplot of TAX')
+
+plt.subplot(1,3,2)
+sns.distplot(a = df2.TAX,color = '#500050')
+plt.title('Distribution Plot of TAX')
+
+plt.subplot(1,3,3)
+sns.scatterplot(x = df2.TAX,y = df2.MEDV)
+plt.title('Scatter Plot of TAX vs MEDV')
+
+plt.show()    
+
+
+temp_df = df2[df1['TAX'] > 600].sort_values(['RM','MEDV'])
+temp_df.shape
+temp_df.describe()
+
+
+
+tax_10 = df2[(df2['TAX'] < 600) & (df2['LSTAT'] >= 0) & (df2['LSTAT'] < 10)]['TAX'].mean()
+tax_20 = df2[(df2['TAX'] < 600) & (df2['LSTAT'] >= 10) & (df2['LSTAT'] < 20)]['TAX'].mean()
+tax_30 = df2[(df2['TAX'] < 600) & (df2['LSTAT'] >= 20) & (df2['LSTAT'] < 30)]['TAX'].mean()
+tax_40 = df2[(df2['TAX'] < 600) & (df2['LSTAT'] >= 30)]['TAX'].mean()
+
+indexes = list(df2.index)
+for i in indexes:
+    if(0 <= df2['LSTAT'][i] < 10):
+        df2.at[i,'TAX'] = tax_10
+    elif(10 <= df2['LSTAT'][i] < 20):
+        df2.at[i,'TAX'] = tax_20
+    elif(20 <= df2['LSTAT'][i] < 30):
+        df2.at[i,'TAX'] = tax_30
+    elif(30 <= df2['LSTAT'][i]):
+        df2.at[i,'TAX'] = tax_40
+        
+print('Value imputed successfully !')
+
+
+
+df2[df2['TAX'] > 600]['TAX'].count()
+
+
+
+sns.distplot(a = df2.TAX,color = '#500050')
+plt.title('Distribution Plot of TAX after replacing extreme values')
+plt.show()
+
+df2.describe()
+
+
+
+
+
+
+
+
+plt.figure(figsize = (20,3))
+
+plt.subplot(1,3,1)
+sns.boxplot(df2['PTRATIO'],color = '#005030')
+plt.title('Boxplot of PTRATIO')
+
+plt.subplot(1,3,2)
+sns.distplot(a = df2.PTRATIO,color = '#500050')
+plt.title('Distribution Plot of PTRATIO')
+
+plt.subplot(1,3,3)
+sns.scatterplot(x = df2.PTRATIO,y = df2.MEDV)
+plt.title('Scatter Plot of PTRATIO vs MEDV')
+
+plt.show()
+
+
+
+
+plt.figure(figsize = (20,3))
+
+plt.subplot(1,3,1)
+sns.boxplot(df2['LSTAT'],color = '#005030')
+plt.title('Boxplot of LSTAT')
+
+plt.subplot(1,3,2)
+sns.distplot(a = df2.LSTAT,color = '#500050')
+plt.title('Distribution Plot of LSTAT')
+
+plt.subplot(1,3,3)
+sns.scatterplot(x = df2.LSTAT,y = df2.MEDV)
+plt.title('Scatter Plot of LSTAT vs MEDV')
+
+plt.show()
+
+
+
+
+
+Q3 = d['LSTAT']['75%']
+Q1 = d['LSTAT']['25%']
+IQR = Q3 - Q1
+ub = Q3 + 1.5*IQR
+lb = Q1 - 1.5*IQR
+
+df2[df2['LSTAT'] > ub].sort_values(by = 'LSTAT')
+
+
+
+
+plt.figure(figsize = (20,3))
+
+plt.subplot(1,3,1)
+sns.boxplot(df2['RM'],color = '#005030')
+plt.title('Boxplot of RM')
+
+plt.subplot(1,3,2)
+sns.distplot(a = df2.RM,color = '#500050')
+plt.title('Distribution Plot of RM')
+
+plt.subplot(1,3,3)
+sns.scatterplot(x = df2.RM,y = df2.MEDV)
+plt.title('Scatter Plot of RM vs MEDV')
+
+plt.show()
+
+
+
+Q3 = d['RM']['75%']
+Q1 = d['RM']['25%']
+IQR = Q3 - Q1
+ub = Q3 + 1.5*IQR
+lb = Q1 - 1.5*IQR
+
+df2[df2['RM'] < lb].sort_values(by = ['RM','MEDV'])
+
+
+
+print(f"Shape of the dataset before removing outlier {df2.shape} ")
+
+df3 = df2.drop(axis = 0,index = [365,367])
+
+
+
+print(f"Shape of the dataset after removing outlier {df3.shape} ")
+
+df3[df3['RM'] > ub].sort_values(by = ['RM','MEDV'])
+
+
+
+
+print(f"Shape of the dataset before removing outlier {df3.shape} ")
+
+df3 = df3.drop(axis = 0,index = 364)
+
+
+print(f"Shape of the dataset after removing outlier {df3.shape} ")
+
+
+# now apply linear regression
+
+
+#Now will split our dataset into Dependent variable and Independent variable
+
+X = df3.iloc[:,0:4].values
+y = df3.iloc[:,-1:].values
+
+
+
+print(f"Shape of Dependent Variable X = {X.shape}")
+print(f"Shape of Independent Variable y = {y.shape}")
+
+
+
+def FeatureScaling(X):
+    """
+    is function takes an array as an input, which needs to be scaled down.
+    Apply Standardization technique to it and scale down the features with mean = 0 and standard deviation = 1
+
+    Input <- 2 dimensional numpy array
+    Returns -> Numpy array after applying Feature Scaling
+    """
+    mean = np.mean(X,axis=0)
+    std = np.std(X,axis=0)
+    for i in range(X.shape[1]):
+        X[:,i] = (X[:,i]-mean[i])/std[i]
+    return X
+
+
+
+X = FeatureScaling(X)
+
+
+
+m,n = X.shape
+X = np.append(arr=np.ones((m,1)),values=X,axis=1)
+
+
+
+#Now we will spit our data into Train set and Test Set
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2,random_state = 42)
+
+print(f"Shape of X_train = {X_train.shape}")
+print(f"Shape of X_test = {X_test.shape}")
+print(f"Shape of y_train = {y_train.shape}")
+print(f"Shape of y_test = {y_test.shape}")
+
+
+
+#ComputeCost function determines the cost (sum of squared errors)
+
+def ComputeCost(X,y,theta):
+    """
+    This function takes three inputs and uses the Cost Function to determine the cost (basically error of prediction vs
+    actual values)
+    Cost Function: Sum of square of error in predicted values divided by number of data points in the set
+    J = 1/(2*m) *  Summation(Square(Predicted values - Actual values))
+
+    Input <- Take three numoy array X,y and theta
+    Return -> The cost calculated from the Cost Function
+    """
+    m=X.shape[0] #number of data points in the set
+    J = (1/(2*m)) * np.sum((X.dot(theta) - y)**2)
+    return J
+
+
+
+#Gradient Descent Algorithm to minimize the Cost and find best parameters in order to get best line for our dataset
+
+def GradientDescent(X,y,theta,alpha,no_of_iters):
+    m=X.shape[0]
+    J_Cost = []
+    for i in range(no_of_iters):
+        error = np.dot(X.transpose(),(X.dot(theta)-y))
+        theta = theta - alpha * (1/m) * error
+        J_Cost.append(ComputeCost(X,y,theta))
+
+    return theta, np.array(J_Cost)
+
+
+
+iters = 1000
+
+alpha1 = 0.001
+theta1 = np.zeros((X_train.shape[1],1))
+theta1, J_Costs1 = GradientDescent(X_train,y_train,theta1,alpha1,iters)
+
+alpha2 = 0.003
+theta2 = np.zeros((X_train.shape[1],1))
+theta2, J_Costs2 = GradientDescent(X_train,y_train,theta2,alpha2,iters)
+
+alpha3 = 0.01
+theta3 = np.zeros((X_train.shape[1],1))
+theta3, J_Costs3 = GradientDescent(X_train,y_train,theta3,alpha3,iters)
+
+alpha4 = 0.03
+theta4 = np.zeros((X_train.shape[1],1))
+theta4, J_Costs4 = GradientDescent(X_train,y_train,theta4,alpha4,iters)
+
+
+
+plt.figure(figsize=(8,5))
+plt.plot(J_Costs1,label = 'alpha = 0.001')
+plt.plot(J_Costs2,label = 'alpha = 0.003')
+plt.plot(J_Costs3,label = 'alpha = 0.01')
+plt.plot(J_Costs4,label = 'alpha = 0.03')
+plt.title('Convergence of Gradient Descent for different values of alpha')
+plt.xlabel('No. of iterations')
+plt.ylabel('Cost')
+plt.legend()
+plt.show()
+
+
+
+theta4
+
+
+
+def Predict(X,theta):
+    """
+    This function predicts the result for the unseen data
+    """
+    y_pred = X.dot(theta)
+    return y_pred
+
+
+
+y_pred = Predict(X_test,theta4)
+y_pred[:5]
+
+
+
+plt.scatter(x=y_test,y=y_pred,alpha=0.5)
+plt.xlabel('y_test',size=12)
+plt.ylabel('y_pred',size=12)
+plt.title('Predicited Values vs Original Values (Test Set)',size=15)
+plt.show()
+
+
+
+
+sns.residplot(x = y_pred,y = (y_pred-y_test))
+plt.xlabel('Predicited Values',size=12)
+plt.ylabel("Residues",size=12)
+plt.title('Residual Plot',size=15)
+plt.show()
+
+
+
+
+sns.distplot(y_pred-y_test)
+plt.xlabel('Residual',size=12)
+plt.ylabel('Frquency',size=12)
+plt.title('Distribution of Residuals',size=15)
+plt.show()
+
+
+
+from sklearn import metrics
+r2= metrics.r2_score(y_test,y_pred)
+N,p = X_test.shape
+adj_r2 = 1-((1-r2)*(N-1))/(N-p-1)
+print(f'R^2 = {r2}')
+print(f'Adjusted R^2 = {adj_r2}')
+
+
+
+from sklearn import metrics
+mse = metrics.mean_squared_error(y_test,y_pred)
+mae = metrics.mean_absolute_error(y_test,y_pred)
+rmse = np.sqrt(metrics.mean_squared_error(y_test,y_pred))
+print(f'Mean Squared Error: {mse}',f'Mean Absolute Error: {mae}',f'Root Mean Squared Error: {rmse}',sep='\n')
+
+
+
+#coefficients of regression model
+coeff=np.array([y for x in theta4 for y in x]).round(2)
+features=['Bias','RM','TAX','PTRATIO','LSTAT']
+eqn = 'MEDV = '
+for f,c in zip(features,coeff):
+    eqn+=f" + ({c} * {f})";
+
+print(eqn)
+
+
+
+sns.barplot(x=features,y=coeff)
+plt.ylim([-5,25])
+plt.xlabel('Coefficient Names',size=12)
+plt.ylabel('Coefficient Values',size=12)
+plt.title('Visualising Regression Coefficients',size=15)
+plt.show()
+
+or
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset
+df = pd.read_csv('/mnt/data/housing_data.csv')
+
+# Define features and target variable
+X = df.drop(columns=['MEDV'])  # 'MEDV' is assumed to be the target variable
+y = df['MEDV']
+
+# Split the dataset into training (80%) and testing (20%) sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the Linear Regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model using Mean Squared Error (MSE)
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse:.2f}')
+
+# Visualize actual vs predicted prices
+plt.figure(figsize=(8, 6))
+plt.scatter(y_test, y_pred, alpha=0.7, color='blue')
+plt.xlabel("Actual Prices")
+plt.ylabel("Predicted Prices")
+plt.title("Actual vs Predicted Prices")
+plt.grid(True)
+plt.show()
+
+
+
+<============================================================================================================================================================================================================================================================>
 exp 5 : Data Analytics II
 1. Implement logistic regression using Python/R to perform classification on
 Social_Network_Ads.csv dataset.
