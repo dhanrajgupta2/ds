@@ -71,3 +71,48 @@ plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.title("Confusion Matrix Heatmap")
 plt.show()
+
+or 
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score, classification_report
+
+# Load dataset
+data = pd.read_csv("iris.csv")
+X, y = data.iloc[:, :-1], data.iloc[:, -1]
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train and predict
+model = GaussianNB().fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+# Compute Confusion Matrix and Metrics
+conf_matrix = confusion_matrix(y_test, y_pred)
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='macro')
+recall = recall_score(y_test, y_pred, average='macro')
+f1 = f1_score(y_test, y_pred, average='macro')
+
+# Display results separately
+print("Confusion Matrix:")
+print(conf_matrix)
+
+print("Accuracy:")
+print(f"{accuracy:.4f}")
+
+print("Precision:")
+print(f"{precision:.4f}")
+
+print("Recall:")
+print(f"{recall:.4f}")
+
+print("F1 Score:")
+print(f"{f1:.4f}")
+
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
