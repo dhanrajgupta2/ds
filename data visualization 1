@@ -1,193 +1,59 @@
 EXP 8 
 
-""""Data Visualization I
-1. Use the inbuilt dataset 'titanic'. The dataset contains 891 rows and contains information
-about the passengers who boarded the unfortunate Titanic ship. Use the Seaborn library to
-see if we can find any patterns in the data.
-2. Write a code to check how the price of the ticket (column name: 'fare') for each passenger
-is distributed by plotting a histogram."""
+Data Visualization II
+1. Use the inbuilt dataset 'titanic' as used in the above problem. Plot a box plot for distribution of age
+with respect to each gender along with the information about whether they survived or not. (Column
+names : 'sex' and 'age')
+2. Write observations on the inference from the above statistics.
 
-answer
-
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import warnings
-warnings.filterwarnings('ignore')
-data=pd.read_csv('/home/student/Downloads/Titanic/Titanic-Dataset.csv')
-data
-
-
-data.head()
-
-data.shape
-
-data.get
-
-data.sample(891)
-
-data.isnull().sum()
-
-
-print(data.drop(['Cabin'],axis=1,inplace=True,errors='ignore'))
-
-
-data["Age"].fillna(data["Age"].mean(),inplace=True)
-
-
-print(data["Embarked"].fillna("S",inplace=True))
-data.isnull().sum()
-
-
-#data analysis
-data.describe()
+answer 
 
 
 import seaborn as sns
-data["Survived"].value_counts()
-
-
-sns.countplot(x="Survived",data=data)
-#plot os count
-
-
-sns.countplot(x="Sex", hue="Survived", data=data)
-
-sns.countplot(x="Pclass", hue="Survived", data=data)
-
-sns.countplot(x="Embarked", hue="Survived", data=data)
-
-sns.countplot(x="Parch", hue="Survived", data=data)
-
-sns.countplot(x="SibSp", hue="Survived", data=data)
-
-sns.countplot(x="Age", hue="Survived", data=data)
-
-sns.countplot(x="Ticket", hue="Survived", data=data)
-
-
-sns.countplot(x="Fare", hue="Survived", data=data)
-
-sns.countplot(x="PassengerId", hue="Survived", data=data)
-
-
-import matplotlib.pyplot as plt
-plt.figure(figsize=(12, 6))
-plt.subplot(1, 2, 1)
-sns.histplot(data['Age'].dropna(), kde=True, bins=20, color='pink')
-plt.title('Histogram of Age')
-plt.xlabel('Age')
-plt.ylabel('Frequency')
-plt.subplot(1, 2, 2)
-sns.histplot(data['Fare'].dropna(), kde=True, bins=20, color='green')
-plt.title('Histogram of Fare')
-plt.xlabel('Fare')
-plt.ylabel('Frequency')
-plt.tight_layout()
-plt.show()
-
-or 
-
-# Import necessary libraries
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-import warnings
-
-# Ignore warnings for clean output
-warnings.filterwarnings('ignore')
 
 # Load Titanic dataset
-data = pd.read_csv('/home/student/Downloads/Titanic/Titanic-Dataset.csv')
+data = sns.load_dataset('titanic')
 
-# Display dataset
-data.head()
 
-# Check shape of dataset
-print("Shape of dataset:", data.shape)
 
-# Check missing values
-print("Missing values before cleaning:\n", data.isnull().sum())
-
-# Drop 'Cabin' column due to too many missing values
-data.drop(['Cabin'], axis=1, inplace=True, errors='ignore')
-
-# Fill missing Age values with mean age
-data["Age"].fillna(data["Age"].mean(), inplace=True)
-
-# Fill missing Embarked values with most common value 'S'
-data["Embarked"].fillna("S", inplace=True)
-
-# Check missing values after cleaning
-print("Missing values after cleaning:\n", data.isnull().sum())
-
-# Data Summary
-print("Dataset Summary:\n", data.describe())
-
-# Count of passengers survived vs. not survived
-print("Survival Count:\n", data["Survived"].value_counts())
-
-# Data Visualization
-sns.set_style("whitegrid")
-
-# Count plots for categorical features
-plt.figure(figsize=(15, 8))
-
-plt.subplot(2, 3, 1)
-sns.countplot(x="Survived", data=data)
-plt.title("Survival Count")
-
-plt.subplot(2, 3, 2)
-sns.countplot(x="Sex", hue="Survived", data=data)
-plt.title("Survival by Gender")
-
-plt.subplot(2, 3, 3)
-sns.countplot(x="Pclass", hue="Survived", data=data)
-plt.title("Survival by Passenger Class")
-
-plt.subplot(2, 3, 4)
-sns.countplot(x="Embarked", hue="Survived", data=data)
-plt.title("Survival by Embarkation Point")
-
-plt.subplot(2, 3, 5)
-sns.countplot(x="Parch", hue="Survived", data=data)
-plt.title("Survival by Number of Parents/Children")
-
-plt.subplot(2, 3, 6)
-sns.countplot(x="SibSp", hue="Survived", data=data)
-plt.title("Survival by Number of Siblings/Spouses")
-
-plt.tight_layout()
+# Boxplot for Age vs. Survival
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='survived', y='age', hue='sex', data=data, palette='coolwarm')
+plt.title('Age Distribution by Survival and Gender')
+plt.xlabel('Survived')
+plt.ylabel('Age')
 plt.show()
 
-# Histogram plots
-plt.figure(figsize=(12, 6))
-
-# Histogram of Age
-plt.subplot(1, 2, 1)
-sns.histplot(data['Age'].dropna(), kde=True, bins=20, color='pink')
-plt.title('Histogram of Age')
-plt.xlabel('Age')
-plt.ylabel('Frequency')
-
-# Histogram of Fare
-plt.subplot(1, 2, 2)
-sns.histplot(data['Fare'].dropna(), kde=True, bins=20, color='green')
-plt.title('Histogram of Fare')
-plt.xlabel('Fare')
-plt.ylabel('Frequency')
-
-plt.tight_layout()
+# Boxplot for Fare vs. Survival
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='survived', y='fare', hue='sex', data=data, palette='coolwarm')
+plt.title('Fare Distribution by Survival and Gender')
+plt.xlabel('Survived')
+plt.ylabel('Fare')
 plt.show()
 
-# Histogram of Fare with Log Transformation (For Better Visualization)
-plt.figure(figsize=(8, 5))
-sns.histplot(np.log1p(data['Fare']), kde=True, bins=20, color='blue')
-plt.title('Histogram of Log(Fare)')
-plt.xlabel('Log(Fare)')
-plt.ylabel('Frequency')
+# Boxplot for Pclass vs. Survival
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='survived', y='pclass', hue='sex', data=data, palette='coolwarm')
+plt.title('Passenger Class Distribution by Survival and Gender')
+plt.xlabel('Survived')
+plt.ylabel('Pclass')
 plt.show()
 
-  
+# Boxplot for SibSp vs. Survival
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='survived', y='sibsp', hue='sex', data=data, palette='coolwarm')
+plt.title('Siblings/Spouses Aboard vs. Survival and Gender')
+plt.xlabel('Survived')
+plt.ylabel('SibSp')
+plt.show()
+
+# Boxplot for Parch vs. Survival
+plt.figure(figsize=(10, 6))
+sns.boxplot(x='survived', y='parch', hue='sex', data=data, palette='coolwarm')
+plt.title('Parents/Children Aboard vs. Survival and Gender')
+plt.xlabel('Survived')
+plt.ylabel('Parch')
+plt.show()
