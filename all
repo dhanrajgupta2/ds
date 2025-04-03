@@ -1055,5 +1055,95 @@ plt.title('Fare Distribution')
 plt.xlabel('Fare')
 plt.ylabel('Frequency')
 plt.show()
+<============================================================================================================================================================================================================================================================>
+
+# exp 10
+# Data Visualization III
+# Download the Iris flower dataset or any other dataset into a DataFrame. (e.g.,
+# https://archive.ics.uci.edu/ml/datasets/Iris ). Scan the dataset and give the inference as:
+# List down the features and their types (e.g., numeric, nominal) available in the dataset.
+# Create a histogram for each feature in the dataset to illustrate the feature distributions.
+# Create a boxplot for each feature in the dataset.
+# Compare distributions and identify outliers.
+
+
+answer 
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load the Titanic dataset from seaborn's inbuilt dataset
+iris = sns.load_dataset('iris')
+iris
+
+# List down the features and their types (e.g., numeric, nominal) available in the dataset.
+feature = iris.dtypes
+feature
+
+
+# Create histograms for each feature
+# Histogram for Survived
+plt.figure(figsize=(8, 4))
+sns.histplot(x='sepal_length', data=iris, kde=True)
+plt.title('sepal_length')
+plt.show()
+
+# Histogram for Age
+plt.figure(figsize=(8, 4))
+sns.histplot(x='sepal_width', data=iris, kde=True)
+plt.title('sepal_width')
+plt.show()
+
+# Histogram for Fare
+plt.figure(figsize=(8, 4))
+sns.histplot(x='petal_length', data=iris, kde=True)
+plt.title('petal_length')
+plt.show()
+
+# Histogram for Pclass
+plt.figure(figsize=(8, 4))
+sns.histplot(x='petal_width', data=iris)
+plt.title('petal_width')
+plt.show()
+
+
+# Create boxplots for each feature
+# Boxplot for sepal_length 
+plt.figure(figsize=(20, 10))
+sns.boxplot(x='sepal_length',hue='species', data=iris, palette='coolwarm')
+plt.title('Distribution by sepal_length and sepal_width')
+plt.xlabel('sepal_length')
+plt.show()
+
+# Boxplot for sepal_width
+plt.figure(figsize=(20, 10))
+sns.boxplot(x='sepal_width',hue='species', data=iris, palette='coolwarm')
+plt.title('Distribution by sepal_width')
+plt.xlabel('sepal_width')
+plt.show()
+
+# Boxplot for petal_length
+plt.figure(figsize=(20, 10))
+sns.boxplot(x='petal_length',hue='species', data=iris, palette='coolwarm')
+plt.title('Distribution by petal_length')
+plt.xlabel('petal_length')
+plt.show()
+
+# Boxplot for petal_width
+plt.figure(figsize=(20, 10))
+sns.boxplot(x='petal_width',hue='species', data=iris, palette='coolwarm')
+plt.title('Distribution by petal_width')
+plt.xlabel('petal_width')
+plt.show()
+
+or only for boxplot
+
+for column in iris.select_dtypes(include=['number']).columns:
+    plt.figure(figsize=(8, 4))
+    sns.boxplot(x=iris[column])
+    plt.title(f'Boxplot of {column}')
+    plt.show()
 
 <============================================================================================================================================================================================================================================================>
