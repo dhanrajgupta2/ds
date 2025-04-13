@@ -102,7 +102,7 @@ dimensions = df.shape # dimensions
 dimensions
 
 # Step 5: Data Formatting and Normalization
-
+<==========================================================================================>
 # Ensure numerical columns are of type float
 numerical_columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
 df[numerical_columns] = df[numerical_columns].astype(float)
@@ -112,6 +112,13 @@ df['species'] = df['species'].astype('category')
 
 scaler = MinMaxScaler()
 df[numerical_columns] = scaler.fit_transform(df[numerical_columns])
+
+or 
+
+numerical_columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
+scaler = MinMaxScaler()
+df[numerical_columns] = scaler.fit_transform(df[numerical_columns])
+<=========================================================================================>
 
 # Step 6: Convert Categorical Variables into Quantitative Variables
 
