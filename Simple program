@@ -1,0 +1,50 @@
+exp 13
+
+Write a simple program in SCALA using Apache Spark framework
+
+sol
+
+File: WordCount.scala
+
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkConf
+
+object WordCount {
+  def main(args: Array[String]) {
+    if (args.length < 2) {
+      System.err.println("Usage: WordCount <input> <output>")
+      System.exit(1)
+    }
+
+    val conf = new SparkConf().setAppName("Simple Word Count").setMaster("local[*]")
+    val sc = new SparkContext(conf)
+
+    val input = sc.textFile(args(0))
+    val words = input.flatMap(line => line.split("\\W+"))
+    val wordPairs = words.map(word => (word.toLowerCase, 1))
+    val wordCounts = wordPairs.reduceByKey(_ + _)
+
+    wordCounts.saveAsTextFile(args(1))
+
+    sc.stop()
+  }
+}
+
+Steps to Run
+
+scalac -classpath $SPARK_HOME/jars/* WordCount.scala
+
+jar cf wordcount.jar WordCount*.class
+
+mkdir input
+echo "Spark is fast. Spark is awesome!" > input/file.txt
+
+
+$SPARK_HOME/bin/spark-submit \
+  --class WordCount \
+  --master local[*] \
+  wordcount.jar input output
+
+
+cat output/part-*
+
