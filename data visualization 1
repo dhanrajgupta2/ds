@@ -1,59 +1,42 @@
 EXP 8 
 
-Data Visualization II
-1. Use the inbuilt dataset 'titanic' as used in the above problem. Plot a box plot for distribution of age
-with respect to each gender along with the information about whether they survived or not. (Column
-names : 'sex' and 'age')
-2. Write observations on the inference from the above statistics.
+1. Use the inbuilt dataset 'titanic'. The dataset contains 891 rows and contains information about the passengers who boarded the unfortunate Titanic ship. Use the Seaborn library to see if we can find any patterns in the data.  
 
+2. Write a code to check how the price of the ticket (column name: 'fare') for each passenger is distributed by plotting a histogram
 answer 
 
+# task 1
 
+# Import required libraries
 import seaborn as sns
-import pandas as pd
 import matplotlib.pyplot as plt
 
-# Load Titanic dataset
-data = sns.load_dataset('titanic')
+# Load the inbuilt Titanic dataset from seaborn
+titanic = sns.load_dataset('titanic')
 
+# Display the first few rows
+titanic.head()
 
-
-# Boxplot for Age vs. Survival
-plt.figure(figsize=(10, 6))
-sns.boxplot(x='survived', y='age', hue='sex', data=data, palette='coolwarm')
-plt.title('Age Distribution by Survival and Gender')
-plt.xlabel('Survived')
-plt.ylabel('Age')
+# Survival count by gender
+sns.countplot(x='sex', hue='survived', data=titanic)
+plt.title("Survival Count by Gender")
 plt.show()
 
-# Boxplot for Fare vs. Survival
-plt.figure(figsize=(10, 6))
-sns.boxplot(x='survived', y='fare', hue='sex', data=data, palette='coolwarm')
-plt.title('Fare Distribution by Survival and Gender')
-plt.xlabel('Survived')
-plt.ylabel('Fare')
+# Survival rate based on class
+sns.countplot(x='class', hue='survived', data=titanic)
+plt.title("Survival Count by Class")
 plt.show()
 
-# Boxplot for Pclass vs. Survival
-plt.figure(figsize=(10, 6))
-sns.boxplot(x='survived', y='pclass', hue='sex', data=data, palette='coolwarm')
-plt.title('Passenger Class Distribution by Survival and Gender')
-plt.xlabel('Survived')
-plt.ylabel('Pclass')
+# Age distribution by survival
+sns.histplot(data=titanic, x='age', hue='survived', kde=True, multiple="stack")
+plt.title("Age Distribution by Survival")
 plt.show()
 
-# Boxplot for SibSp vs. Survival
-plt.figure(figsize=(10, 6))
-sns.boxplot(x='survived', y='sibsp', hue='sex', data=data, palette='coolwarm')
-plt.title('Siblings/Spouses Aboard vs. Survival and Gender')
-plt.xlabel('Survived')
-plt.ylabel('SibSp')
-plt.show()
+# task 2 
 
-# Boxplot for Parch vs. Survival
-plt.figure(figsize=(10, 6))
-sns.boxplot(x='survived', y='parch', hue='sex', data=data, palette='coolwarm')
-plt.title('Parents/Children Aboard vs. Survival and Gender')
-plt.xlabel('Survived')
-plt.ylabel('Parch')
+# Histogram for Fare distribution
+sns.histplot(titanic['fare'], bins=30, kde=True)
+plt.title("Distribution of Fare Prices")
+plt.xlabel("Fare")
+plt.ylabel("Number of Passengers")
 plt.show()
