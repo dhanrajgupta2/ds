@@ -1,0 +1,70 @@
+exp 7 
+1. Extract Sample document and apply following document preprocessing methods: Tokenization, POS Tagging, stop words removal, Stemming and Lemmatization. 
+
+2. Create representation of document by calculating Term Frequency and Inverse Document Frequency. 
+
+solution 
+
+pip install nltk scikit-learn
+
+# Cell 1: Import required libraries
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+from sklearn.feature_extraction.text import TfidfVectorizer
+import pandas as pd
+
+# Download required NLTK data
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+
+# Cell 2: Sample document
+documents = [
+    "Natural Language Processing (NLP) enables computers to understand human language. "
+    "It is widely used in applications like chatbots, sentiment analysis, and machine translation."
+]
+
+# Cell 3: Tokenization
+tokens = word_tokenize(documents[0])
+print("Tokens:", tokens)
+
+# Cell 4: POS Tagging
+pos_tags = pos_tag(tokens)
+print("POS Tags:", pos_tags)
+
+# Cell 5: Stop words removal
+stop_words = set(stopwords.words('english'))
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words and word.isalpha()]
+print("Filtered Tokens:", filtered_tokens)
+
+# Cell 6: Stemming
+stemmer = PorterStemmer()
+stemmed = [stemmer.stem(word) for word in filtered_tokens]
+print("Stemmed Tokens:", stemmed)
+
+# Cell 7: Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+print("Lemmatized Tokens:", lemmatized)
+
+# Cell 8: TF-IDF Calculation
+# Add more sample documents for better IDF values
+documents = [
+    "Natural Language Processing enables machines to understand text.",
+    "Chatbots and sentiment analysis are applications of NLP.",
+    "Machine translation is a part of Natural Language Processing."
+]
+
+# Vectorize with TfidfVectorizer
+vectorizer = TfidfVectorizer(stop_words='english')
+tfidf_matrix = vectorizer.fit_transform(documents)
+
+# Convert to DataFrame for better view
+df_tfidf = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out())
+print("TF-IDF Matrix:")
+df_tfidf
