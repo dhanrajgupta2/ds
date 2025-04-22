@@ -42,6 +42,12 @@ stop_words = set(stopwords.words('english'))
 filtered_tokens = [word for word in tokens if word.lower() not in stop_words and word.isalpha()]
 print("Filtered Tokens:", filtered_tokens)
 
+or
+
+stop_words = stopwords.words('english')
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words and word.isalpha()]
+
+
 # Cell 6: Stemming
 stemmer = PorterStemmer()
 stemmed = [stemmer.stem(word) for word in filtered_tokens]
