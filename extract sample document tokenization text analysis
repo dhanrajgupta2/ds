@@ -79,6 +79,10 @@ text = "Natural Language Processing (NLP) enables computers to understand human 
 # Step 2: Tokenization
 tokens = word_tokenize(text)
 
+# pos  tag
+pos = pos_tag(token)
+print("POS Tags:", pos)
+
 # Step 3: Stopword Removal
 
 stop_words = stopwords.words('english') 
