@@ -17,10 +17,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
 
 # Download required NLTK data
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('stopwords')
-nltk.download('wordnet')
+nltk.download('punkt') # tokenizer 
+nltk.download('averaged_perceptron_tagger') # pos_tag
+nltk.download('stopwords') # stop_words
+nltk.download('wordnet') # porterstemmer and wordnetlemmatizer
 nltk.download('omw-1.4')
 
 # Cell 2: Sample document
@@ -57,6 +57,52 @@ print("Stemmed Tokens:", stemmed)
 lemmatizer = WordNetLemmatizer()
 lemmatized = [lemmatizer.lemmatize(word) for word in filtered_tokens]
 print("Lemmatized Tokens:", lemmatized)
+
+or 
+
+
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+
+# Download necessary NLTK resources
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+
+# Step 1: Input text
+text = "Natural Language Processing (NLP) enables computers to understand human language."
+
+# Step 2: Tokenization
+tokens = word_tokenize(text)
+
+# Step 3: Stopword Removal
+
+stop_words = stopwords.words('english') 
+filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+
+# Step 4: Stemming
+stemmer = PorterStemmer()
+stemmed_tokens = [stemmer.stem(word) for word in filtered_tokens]
+
+# Step 5: Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized_tokens = [lemmatizer.lemmatize(word) for word in filtered_tokens]
+
+# Output
+print("Original Tokens:", tokens)
+print("Filtered Tokens (no stopwords):", filtered_tokens)
+print("Stemmed Tokens:", stemmed_tokens)
+print("Lemmatized Tokens:", lemmatized_tokens)
+
+
+
+
+<=====================================================================================>
+# task 2 
 
 # Cell 8: TF-IDF Calculation
 # Add more sample documents for better IDF values
