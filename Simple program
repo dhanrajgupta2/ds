@@ -51,7 +51,7 @@ object WordCount {
     val input = sc.textFile(args(0))   // or just write sc.textFile("WordCount.scala")
 
     // Step 3: Split lines into words
-    val words = input.flatMap(line => line.split("\\W+"))
+    val words = input.flatMap(line => line.split("\\W+")) // or val words = input.flatMap(_.split(" ")) 
 
     // Step 4: Map each word to a pair (word, 1)
     val wordPairs = words.map(word => (word.toLowerCase, 1))
