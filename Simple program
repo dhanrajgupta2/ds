@@ -29,7 +29,51 @@ object WordCount {
     sc.stop()
   }
 }
+<==========================================================================================>
 
+or
+
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkConf
+
+object WordCount {
+  def main(args: Array[String]) {
+    if (args.length < 2) {
+      System.err.println("Missing arguments")
+      System.exit(1)
+    }
+
+    // Step 1: Create Spark configuration and context
+    val conf = new SparkConf().setAppName("Simple Word Count").setMaster("local[*]")
+    val sc = new SparkContext(conf)
+
+    // Step 2: Read input file
+    val input = sc.textFile(args(0))
+
+    // Step 3: Split lines into words
+    val words = input.flatMap(line => line.split("\\W+"))
+
+    // Step 4: Map each word to a pair (word, 1)
+    val wordPairs = words.map(word => (word.toLowerCase, 1))
+
+    // Step 5: Reduce by key to get word counts
+    val wordCounts = wordPairs.reduceByKey(_ + _)
+
+    // Step 6: Save the result to output directory
+    wordCounts.saveAsTextFile(args(1))
+
+    // Step 7: Stop the Spark context
+    sc.stop()
+  }
+}
+
+
+
+
+
+
+
+<============================================================================================>
 Steps to Run
 
 scalac -classpath $SPARK_HOME/jars/* WordCount.scala
