@@ -54,7 +54,7 @@ object WordCount {
     val words = input.flatMap(line => line.split("\\W+")) // or val words = input.flatMap(_.split(" ")) 
 
     // Step 4: Map each word to a pair (word, 1)
-    val wordPairs = words.map(word => (word.toLowerCase, 1))
+    val wordPairs = words.map(word => (word.toLowerCase, 1)) // or val wordPairs = words.map(_.toLowerCase -> 1)
 
     // Step 5: Reduce by key to get word counts
     val wordCounts = wordPairs.reduceByKey(_ + _)
