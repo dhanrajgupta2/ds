@@ -44,7 +44,7 @@ object WordCount {
     }
 
     // Step 1: Create Spark configuration and context
-    val conf = new SparkConf().setAppName("Simple Word Count").setMaster("local[*]")
+    val conf = new SparkConf().setMaster("local[*]")
     val sc = new SparkContext(conf)
 
     // Step 2: Read input file
